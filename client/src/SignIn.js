@@ -8,8 +8,7 @@ class SignIn extends Component {
 
     this.state = {
       username: "",
-      password: "",
-      confirmPassword: "",
+      password: ""
     };
   }
 
@@ -17,8 +16,7 @@ class SignIn extends Component {
     event.preventDefault();
     this.props.onSignIn({
       username: this.state.username,
-      password: this.state.password,
-      confirmPassword: this.state.confirmPassword
+      password: this.state.password
     });
   }
 
