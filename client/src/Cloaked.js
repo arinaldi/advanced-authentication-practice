@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class Secret extends Component {
+class Cloaked extends Component {
   constructor() {
     super();
 
@@ -10,7 +10,7 @@ class Secret extends Component {
   }
 
   componentDidMount() {
-    fetch("/api/secret").then((res) => {
+    fetch("/api/cloaked").then((res) => {
       return res.text();
     }).then((data) => {
       this.setState({
@@ -22,11 +22,11 @@ class Secret extends Component {
   render() {
     return (
       <div>
-        <h1>Secret</h1>
+        <h1>Cloaked</h1>
         <p>{this.state.message}</p>
       </div>
     );
   }
 }
 
-export default Secret;
+export default Cloaked;

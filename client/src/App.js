@@ -4,6 +4,8 @@ import "./App.css";
 import SignUpSignIn from "./SignUpSignIn";
 import TopNavbar from "./TopNavbar";
 import Secret from "./Secret";
+import Hidden from "./Hidden";
+import Cloaked from "./Cloaked";
 
 class App extends Component {
   constructor() {
@@ -23,13 +25,21 @@ class App extends Component {
       this.setState({
         signUpSignInError: "Must Provide All Fields"
       });
+    } else if (password !== confirmPassword) {
+      this.setState({
+        signUpSignInError: "Passwords Do Not Match"
+      });
     } else {
-
       fetch("/api/signup", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(credentials)
       }).then((res) => {
+        if (res.status === 422) {
+          return this.setState({
+            signUpSignInError: "Username is taken"
+          });
+        }
         return res.json();
       }).then((data) => {
         const { token } = data;
@@ -43,7 +53,33 @@ class App extends Component {
   }
 
   handleSignIn(credentials) {
-    // Handle Sign Up
+    const { username, password } = credentials;
+    if (!username.trim() || !password.trim() ) {
+      this.setState({
+        signUpSignInError: "Must Provide All Fields"
+      });
+    } else {
+
+      fetch("/api/signin", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(credentials)
+      }).then((res) => {
+        if (res.status === 401) {
+          return this.setState({
+            signUpSignInError: "Invalid login"
+          });
+        }
+        return res.json();
+      }).then((data) => {
+        const { token } = data;
+        localStorage.setItem("token", token);
+        this.setState({
+          signUpSignInError: "",
+          authenticated: token
+        });
+      });
+    }
   }
 
   handleSignOut() {
@@ -57,7 +93,8 @@ class App extends Component {
     return (
       <SignUpSignIn 
         error={this.state.signUpSignInError} 
-        onSignUp={this.handleSignUp} 
+        onSignUp={this.handleSignUp}
+        onSignIn={this.handleSignIn}
       />
     );
   }
@@ -68,6 +105,8 @@ class App extends Component {
         <Switch>
           <Route exact path="/" render={() => <h1>I am protected!</h1>} />
           <Route exact path="/secret" component={Secret} />
+          <Route exact path="/hidden" component={Hidden} />
+          <Route exact path="/cloaked" component={Cloaked} />
           <Route render={() => <h1>NOT FOUND!</h1>} />
         </Switch>
       </div>

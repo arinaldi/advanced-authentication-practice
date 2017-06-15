@@ -36,7 +36,16 @@ app.use(authStrategy);
 app.get("/api/canigetthis", function (req, res) {
   res.send("You got the data. You are authenticated");
 });
+
 app.get("/api/secret", function (req, res) {
+  res.send(`The current user is ${req.user.username}`);
+});
+
+app.get("/api/hidden", function (req, res) {
+  res.send(`The current user is ${req.user.username}`);
+});
+
+app.get("/api/cloaked", function (req, res) {
   res.send(`The current user is ${req.user.username}`);
 });
 

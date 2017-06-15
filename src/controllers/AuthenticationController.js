@@ -3,10 +3,10 @@ import bcrypt from "bcrypt-nodejs";
 import jwt from "jwt-simple";
 
 export function signIn(req, res) {
-  
   console.log("logged in now");
   res.json({ token: tokenForUser(req.user)});
 }
+ 
 export function signUp(req, res, next) {
   const { username, password } = req.body;
   let u = username;
@@ -28,6 +28,7 @@ export function signUp(req, res, next) {
   })
   .catch(err => next(err));
 }
+
 function saveUser(username,password,res,next) {
   // User bcrypt to has their password, remember, we never save plain text passwords!
   bcrypt.genSalt(10, function (err, salt) {
@@ -47,8 +48,8 @@ function saveUser(username,password,res,next) {
     });
   });
 }
+
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
   return jwt.encode({ userId: user.id, iat: timestamp }, process.env.SECRET);
 }
-
